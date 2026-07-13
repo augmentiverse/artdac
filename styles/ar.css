@@ -111,12 +111,19 @@ body {
 .info-panel {
   top: 82px;
   left: 16px;
-  width: min(280px, calc(100vw - 32px));
-  max-height: 178px;
+  width: min(220px, calc(100vw - 32px));
+  max-height: 118px;
   overflow: auto;
-  padding: 11px 12px;
+  padding: 8px 9px;
+  background: rgba(12, 10, 9, 0.42);
+  opacity: 0.72;
   transform: translateY(0);
   transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.info-panel:focus-within,
+.info-panel:hover {
+  opacity: 0.96;
 }
 
 .info-panel.collapsed {
@@ -149,16 +156,16 @@ body {
 .info-panel h1 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 21px;
+  font-size: 17px;
   font-weight: 500;
 }
 
 .info-panel p:last-child {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   color: var(--muted);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 13px;
-  line-height: 1.32;
+  font-size: 11px;
+  line-height: 1.28;
 }
 
 .hotspot-bar {

@@ -24,8 +24,10 @@ const state = {
   mindarThree: null,
   anchor: null,
   model: null,
+  modelLoaded: false,
   spin: false,
   warmLight: false,
+  speaking: false,
   keepVisible: true,
   targetFoundOnce: false,
   isDragging: false,
@@ -79,6 +81,10 @@ function bindUI() {
   document.getElementById("toggle-spin").addEventListener("click", (event) => {
     state.spin = !state.spin;
     event.currentTarget.classList.toggle("active", state.spin);
+  });
+
+  document.getElementById("audio-guide").addEventListener("click", () => {
+    toggleAudioGuide();
   });
 
   document.getElementById("reset-view").addEventListener("click", () => {
@@ -313,13 +319,14 @@ async function startAR() {
     state.anchor = state.mindarThree.addAnchor(0);
     state.anchor.group.visible = false;
 
-    await loadModel(state.anchor.group);
-
     state.anchor.onTargetFound = () => {
       state.targetFoundOnce = true;
       state.anchor.group.visible = true;
       setTrackingStatus(true);
       showHotspot("intro");
+      if (!state.modelLoaded) {
+        document.getElementById("panel-body").textContent = "Tracking is ready. The 3D model is loading in the background.";
+      }
     };
 
     state.anchor.onTargetLost = () => {
@@ -333,6 +340,12 @@ async function startAR() {
     await state.mindarThree.start();
     document.getElementById("loading-screen").classList.add("hidden");
     renderer.setAnimationLoop(() => renderFrame(renderer, scene, camera));
+    loadModel(state.anchor.group).catch((error) => {
+      console.error(error);
+      document.getElementById("panel-title").textContent = "Model could not load";
+      document.getElementById("panel-body").textContent = "The camera is running, but the 3D model file could not be loaded. Check the GLB path and file size.";
+      document.getElementById("info-panel").classList.remove("collapsed");
+    });
   } catch (error) {
     showStartupError(error);
   }
@@ -361,7 +374,8 @@ async function preflightCamera() {
 }
 
 async function loadModel(group) {
-  setStartupMessage("Loading the 3D Mona Lisa model...");
+  const label = state.manifest?.title || "artwork";
+  document.getElementById("panel-body").textContent = `Loading the 3D ${label} model...`;
   const loader = new GLTFLoader();
 
   return new Promise((resolve, reject) => {
@@ -385,6 +399,8 @@ async function loadModel(group) {
         });
 
         group.add(state.model);
+        state.modelLoaded = true;
+        showHotspot("intro");
         resolve();
       },
       undefined,
@@ -462,6 +478,58 @@ function showHotspot(id) {
   document.getElementById("panel-title").textContent = hotspot.title;
   document.getElementById("panel-body").textContent = hotspot.body;
   panel.classList.remove("collapsed");
+}
+
+function toggleAudioGuide() {
+  const button = document.getElementById("audio-guide");
+
+  if (!("speechSynthesis" in window)) {
+    document.getElementById("panel-title").textContent = "Audio unavailable";
+    document.getElementById("panel-body").textContent = "This browser does not support built-in speech narration.";
+    document.getElementById("info-panel").classList.remove("collapsed");
+    return;
+  }
+
+  if (state.speaking) {
+    window.speechSynthesis.cancel();
+    state.speaking = false;
+    button.classList.remove("active");
+    button.textContent = "Audio";
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(getAudioGuideText());
+  utterance.rate = 0.92;
+  utterance.pitch = 1;
+  utterance.onend = () => {
+    state.speaking = false;
+    button.classList.remove("active");
+    button.textContent = "Audio";
+  };
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+  state.speaking = true;
+  button.classList.add("active");
+  button.textContent = "Stop";
+}
+
+function getAudioGuideText() {
+  const manifest = state.manifest;
+  if (!manifest) return "Audio guide is not ready yet.";
+
+  const artist = manifest.artist?.name ? `by ${manifest.artist.name}` : "";
+  const parts = [
+    `${manifest.title} ${artist}.`,
+    manifest.texts?.historicalContext,
+    manifest.texts?.artisticAnalysis,
+    manifest.texts?.composition,
+    manifest.texts?.palette,
+    manifest.texts?.perspectiveTechnique,
+    manifest.texts?.culturalSignificance
+  ];
+
+  return parts.filter(Boolean).join(" ");
 }
 
 function getHotspotContent(id) {

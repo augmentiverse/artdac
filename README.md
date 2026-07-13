@@ -6,9 +6,8 @@ This repository is a GitHub Pages-ready prototype for an augmented reality art b
 
 - `index.html` - book landing page and first spread preview.
 - `ar.html` - live WebAR viewer using MindAR and Three.js.
-- `print-target.html` - printable/scannable Mona Lisa target page.
-- `print-van-gogh.html` - printable/scannable Van Gogh target page.
-- `compile-target.html` - browser utility to generate `assets/targets/van-gogh.mind`.
+- `print-target.html` - rich printable Mona Lisa catalogue spread.
+- `print-van-gogh.html` - rich printable Van Gogh catalogue spread.
 - `assets/paintings/mona-lisa/mona-lisa.jpg` - printed target image.
 - `assets/paintings/mona-lisa/mona-lisa.glb` - 3D model loaded in AR.
 - `assets/paintings/van-gogh/van-gogh__Portrait.jpg` - Van Gogh printed target image.
@@ -45,14 +44,7 @@ On a phone, the easiest route is to upload to GitHub Pages because camera access
 6. Open `print-target.html` on a second device or print it.
 7. Open `ar.html` on your phone and scan the Mona Lisa image.
 
-For Van Gogh:
-
-1. Open `compile-target.html`.
-2. Click **Generate van-gogh.mind**.
-3. Save the downloaded file as `assets/targets/van-gogh.mind`.
-4. Upload that file to GitHub.
-5. Open `print-van-gogh.html` on a second screen or print it.
-6. Open `ar.html?painting=van-gogh` and scan the Van Gogh portrait.
+For Van Gogh, open `print-van-gogh.html` as the printed catalogue spread, then use `ar.html?painting=van-gogh` only when you want the optional AR layer.
 
 ## Important Browser Notes
 
@@ -85,6 +77,8 @@ This prototype already includes `assets/targets/mona-lisa.mind`.
 If you replace the image, regenerate the target with the MindAR image compiler. You can use the official compiler workflow from the MindAR documentation:
 
 https://hiukim.github.io/mind-ar-js-doc/
+
+This repo also includes `compile-target.html` as a developer utility for generating a new `.mind` target during production. It is not part of the reader-facing book experience.
 
 ## Production Next Steps
 

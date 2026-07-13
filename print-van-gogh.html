@@ -3,24 +3,84 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Van Gogh AR Target</title>
+    <title>Van Gogh Self-Portrait - Printed Catalogue Spread</title>
     <link rel="stylesheet" href="styles/site.css" />
   </head>
   <body class="target-body">
-    <main class="target-sheet">
-      <header>
-        <p class="eyebrow">DACIART image target 002</p>
-        <h1>Van Gogh Self-Portrait</h1>
-        <p>Print this page, or display it on another screen, then scan the portrait with the WebAR viewer.</p>
-      </header>
-      <figure class="target-art">
-        <img src="assets/paintings/van-gogh/van-gogh__Portrait.jpg" alt="Van Gogh self-portrait AR target" />
-        <figcaption>Vincent van Gogh, Self-Portrait, 1887 - Image target: target-002-van-gogh</figcaption>
-      </figure>
-      <footer>
-        <a class="button primary" href="ar.html?painting=van-gogh">Launch Van Gogh WebAR</a>
-        <a class="button" href="index.html">Back to Book</a>
-      </footer>
+    <main class="catalogue-spread">
+      <section class="catalogue-plate">
+        <p class="eyebrow">Spread 002 - Post-Impressionism</p>
+        <figure class="target-art">
+          <img src="assets/paintings/van-gogh/van-gogh__Portrait.jpg" alt="Self-Portrait by Vincent van Gogh" />
+          <figcaption>
+            <strong>Self-Portrait</strong>
+            <span>Vincent van Gogh, 1887 - Oil on canvas - Paris period - Post-Impressionism</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="catalogue-text">
+        <header>
+          <p class="eyebrow">Museum Catalogue Entry</p>
+          <h1>Self-Portrait</h1>
+          <p class="artist">Vincent van Gogh</p>
+        </header>
+
+        <dl class="catalogue-meta">
+          <div><dt>Date</dt><dd>1887</dd></div>
+          <div><dt>Movement</dt><dd>Post-Impressionism</dd></div>
+          <div><dt>Medium</dt><dd>Oil on canvas</dd></div>
+          <div><dt>Theme</dt><dd>Self-portraiture and modern identity</dd></div>
+        </dl>
+
+        <div class="catalogue-grid">
+          <section>
+            <h2>Historical Context</h2>
+            <p>Van Gogh painted this self-portrait during his Paris years, when he encountered Impressionism, Neo-Impressionism, Japanese prints, and modern theories of color. The result is a portrait built from energy rather than polish.</p>
+          </section>
+          <section>
+            <h2>Artist Biography</h2>
+            <p>Vincent van Gogh used self-portraiture as both necessity and experiment. Unable to hire models often, he studied his own face repeatedly, turning self-observation into one of the most intense visual diaries in modern art.</p>
+          </section>
+          <section>
+            <h2>Color Palette</h2>
+            <p>The portrait vibrates through complementary contrasts: red-orange hair and beard against blue-green surroundings, with yellow, rose, teal, and dark violet-brown marks woven into the surface.</p>
+          </section>
+          <section>
+            <h2>Brushwork</h2>
+            <p>Short, directional strokes construct the face, jacket, and background. The marks do not simply describe forms; they make the painting feel restless, alert, and psychologically charged.</p>
+          </section>
+          <section>
+            <h2>Composition</h2>
+            <p>The head turns in three-quarter view while the gaze meets the viewer directly. The dark jacket stabilizes the bottom of the image, while the active background presses forward around the figure.</p>
+          </section>
+          <section>
+            <h2>Look Closely</h2>
+            <ul>
+              <li>Trace how the brushstrokes change direction around the brow, cheek, and beard.</li>
+              <li>Compare the red-orange beard with the blue-green background.</li>
+              <li>Notice how the background feels active rather than empty.</li>
+            </ul>
+          </section>
+        </div>
+
+        <section class="timeline-strip">
+          <h2>Timeline</h2>
+          <ol>
+            <li><strong>1853</strong> Van Gogh is born in Zundert, Netherlands.</li>
+            <li><strong>1886</strong> He moves to Paris and studies modern color and brushwork.</li>
+            <li><strong>1887</strong> He paints numerous experimental self-portraits.</li>
+            <li><strong>1888</strong> He leaves Paris for Arles, where his color intensifies further.</li>
+          </ol>
+        </section>
+
+        <aside class="ar-note">
+          <h2>Optional AR Layer</h2>
+          <p>Scan this portrait to view the 3D model and explore hotspots on gaze, color contrast, brushwork, and composition. The printed page is designed to stand alone as a complete catalogue entry.</p>
+          <a class="button primary" href="ar.html?painting=van-gogh">Launch AR</a>
+          <a class="button" href="index.html">Back to Index</a>
+        </aside>
+      </section>
     </main>
   </body>
 </html>

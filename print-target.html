@@ -3,24 +3,84 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mona Lisa AR Target</title>
+    <title>Mona Lisa - Printed Catalogue Spread</title>
     <link rel="stylesheet" href="styles/site.css" />
   </head>
   <body class="target-body">
-    <main class="target-sheet">
-      <header>
-        <p class="eyebrow">DACIART image target 001</p>
-        <h1>Mona Lisa</h1>
-        <p>Print this page, or display it on another screen, then scan the painting with the WebAR viewer.</p>
-      </header>
-      <figure class="target-art">
-        <img src="assets/paintings/mona-lisa/mona-lisa.jpg" alt="Mona Lisa AR target" />
-        <figcaption>Leonardo da Vinci, c. 1503-1519 - Image target: target-001-mona-lisa</figcaption>
-      </figure>
-      <footer>
-        <a class="button primary" href="ar.html">Launch WebAR Viewer</a>
-        <a class="button" href="index.html">Back to Book</a>
-      </footer>
+    <main class="catalogue-spread">
+      <section class="catalogue-plate">
+        <p class="eyebrow">Spread 001 - High Renaissance</p>
+        <figure class="target-art">
+          <img src="assets/paintings/mona-lisa/mona-lisa.jpg" alt="Mona Lisa by Leonardo da Vinci" />
+          <figcaption>
+            <strong>Mona Lisa</strong>
+            <span>Leonardo da Vinci, c. 1503-1519 - Oil on poplar panel - 77 x 53 cm - Musee du Louvre, Paris</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="catalogue-text">
+        <header>
+          <p class="eyebrow">Museum Catalogue Entry</p>
+          <h1>Mona Lisa</h1>
+          <p class="artist">Leonardo da Vinci</p>
+        </header>
+
+        <dl class="catalogue-meta">
+          <div><dt>Date</dt><dd>c. 1503-1519</dd></div>
+          <div><dt>Movement</dt><dd>High Renaissance</dd></div>
+          <div><dt>Medium</dt><dd>Oil on poplar panel</dd></div>
+          <div><dt>Location</dt><dd>Musee du Louvre, Paris</dd></div>
+        </dl>
+
+        <div class="catalogue-grid">
+          <section>
+            <h2>Historical Context</h2>
+            <p>Painted in the early sixteenth century, the Mona Lisa belongs to Leonardo's mature period and reflects the High Renaissance search for balance between ideal beauty, natural observation, and psychological presence.</p>
+          </section>
+          <section>
+            <h2>Artist Biography</h2>
+            <p>Leonardo da Vinci worked across painting, anatomy, optics, engineering, and natural philosophy. His portraits are rare, but they transformed European art through subtle modeling, atmospheric space, and attention to the sitter's inner life.</p>
+          </section>
+          <section>
+            <h2>Composition</h2>
+            <p>The sitter forms a calm pyramid. Her folded hands anchor the base, her shoulders guide the eye upward, and her face becomes the still center of a restless landscape.</p>
+          </section>
+          <section>
+            <h2>Technique</h2>
+            <p>Leonardo's sfumato softens the edges of the face and mouth, making expression appear unstable and alive. Atmospheric perspective pushes the blue-green landscape into depth.</p>
+          </section>
+          <section>
+            <h2>Symbolism</h2>
+            <p>The winding roads, water, bridge, and mountains suggest the connection between human presence and natural transformation. The smile remains powerful because it resists a single fixed interpretation.</p>
+          </section>
+          <section>
+            <h2>Look Closely</h2>
+            <ul>
+              <li>Compare the two sides of the landscape behind her shoulders.</li>
+              <li>Notice how the mouth changes when viewed from the corner of your eye.</li>
+              <li>Follow the triangular rhythm from hands to shoulders to face.</li>
+            </ul>
+          </section>
+        </div>
+
+        <section class="timeline-strip">
+          <h2>Timeline</h2>
+          <ol>
+            <li><strong>1452</strong> Leonardo is born in Vinci.</li>
+            <li><strong>1503</strong> The portrait is likely begun in Florence.</li>
+            <li><strong>1519</strong> Leonardo dies in France.</li>
+            <li><strong>1911-1913</strong> The painting is stolen from and returned to the Louvre.</li>
+          </ol>
+        </section>
+
+        <aside class="ar-note">
+          <h2>Optional AR Layer</h2>
+          <p>Scan this printed image to see the 3D model, rotate it with one finger, pinch to zoom, and open interpretive hotspots. The printed essay remains the primary reading experience.</p>
+          <a class="button primary" href="ar.html?painting=mona-lisa">Launch AR</a>
+          <a class="button" href="index.html">Back to Index</a>
+        </aside>
+      </section>
     </main>
   </body>
 </html>
