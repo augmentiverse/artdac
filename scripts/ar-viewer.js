@@ -5,6 +5,7 @@ import { MindARThree } from "../vendor/mindar-image-three.prod.js";
 const CONFIG = {
   target: "",
   model: "",
+  video: "",
   manifest: "",
   initialScale: 0.42,
   initialRise: 0.18,
@@ -25,6 +26,9 @@ const state = {
   anchor: null,
   model: null,
   modelLoaded: false,
+  video: null,
+  videoMesh: null,
+  videoVisible: false,
   spin: false,
   warmLight: false,
   speaking: false,
@@ -85,6 +89,10 @@ function bindUI() {
 
   document.getElementById("audio-guide").addEventListener("click", () => {
     toggleAudioGuide();
+  });
+
+  document.getElementById("video-guide").addEventListener("click", () => {
+    toggleVideoLayer();
   });
 
   document.getElementById("reset-view").addEventListener("click", () => {
@@ -253,6 +261,7 @@ function renderHotspotButtons(manifest) {
 function configureFromManifest(manifest) {
   CONFIG.target = manifest.ar?.compiledTarget || manifest.print?.compiledMindTarget || CONFIG.target;
   CONFIG.model = manifest.ar?.primaryModel || manifest.media?.model || CONFIG.model;
+  CONFIG.video = manifest.media?.videos?.[0]?.src || "";
   CONFIG.initialScale = manifest.ar?.viewer?.initialScale ?? CONFIG.initialScale;
   CONFIG.initialRise = manifest.ar?.viewer?.initialRise ?? CONFIG.initialRise;
   CONFIG.modelRotation = manifest.ar?.viewer?.modelRotation || CONFIG.modelRotation;
@@ -346,8 +355,85 @@ async function startAR() {
       document.getElementById("panel-body").textContent = "The camera is running, but the 3D model file could not be loaded. Check the GLB path and file size.";
       document.getElementById("info-panel").classList.remove("collapsed");
     });
+    if (CONFIG.video) {
+      addVideoLayer(state.anchor.group);
+    }
   } catch (error) {
     showStartupError(error);
+  }
+}
+
+function addVideoLayer(group) {
+  const button = document.getElementById("video-guide");
+  button.disabled = false;
+  button.classList.add("active");
+  button.textContent = "Hide Video";
+
+  const video = document.createElement("video");
+  video.src = CONFIG.video;
+  video.crossOrigin = "anonymous";
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = "auto";
+
+  const texture = new THREE.VideoTexture(video);
+  texture.encoding = THREE.sRGBEncoding;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+
+  const aspect = 16 / 9;
+  const width = 0.46;
+  const geometry = new THREE.PlaneGeometry(width, width / aspect);
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.96
+  });
+
+  const panel = new THREE.Mesh(geometry, material);
+  panel.name = "ar-video-panel";
+  panel.position.set(0.54, 0.02, CONFIG.initialRise + 0.08);
+  panel.visible = true;
+  group.add(panel);
+
+  state.video = video;
+  state.videoMesh = panel;
+  state.videoVisible = true;
+
+  video.play().catch(() => {
+    document.getElementById("panel-title").textContent = "Video ready";
+    document.getElementById("panel-body").textContent = "Tap the Video button to play the Mona Lisa documentary layer.";
+    document.getElementById("info-panel").classList.remove("collapsed");
+  });
+}
+
+function toggleVideoLayer() {
+  const button = document.getElementById("video-guide");
+
+  if (!CONFIG.video) {
+    document.getElementById("panel-title").textContent = "No video";
+    document.getElementById("panel-body").textContent = "This painting does not have a video layer yet.";
+    document.getElementById("info-panel").classList.remove("collapsed");
+    return;
+  }
+
+  if (!state.videoMesh) {
+    if (state.anchor?.group) addVideoLayer(state.anchor.group);
+    return;
+  }
+
+  state.videoVisible = !state.videoVisible;
+  state.videoMesh.visible = state.videoVisible;
+  button.classList.toggle("active", state.videoVisible);
+
+  if (state.videoVisible) {
+    state.video?.play().catch(() => {});
+    button.textContent = "Hide Video";
+  } else {
+    state.video?.pause();
+    button.textContent = "Video";
   }
 }
 
@@ -424,6 +510,10 @@ function renderFrame(renderer, scene, camera) {
       state.manualRotation.y += delta * 0.55;
       applyModelRotation();
     }
+  }
+
+  if (state.videoMesh) {
+    state.videoMesh.position.z += (state.targetRise + 0.08 - state.videoMesh.position.z) * 0.08;
   }
 
   renderer.render(scene, camera);

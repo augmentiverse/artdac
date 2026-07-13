@@ -152,7 +152,15 @@
     "image": "assets/paintings/mona-lisa/mona-lisa.jpg",
     "model": "assets/paintings/mona-lisa/mona-lisa.glb",
     "audioGuides": [],
-    "videos": [],
+    "videos": [
+      {
+        "id": "mona-lisa-video",
+        "title": "Mona Lisa Video Guide",
+        "src": "assets/paintings/mona-lisa/mona-lisa_video.mp4",
+        "type": "video/mp4",
+        "description": "Short video layer for the Mona Lisa AR experience."
+      }
+    ],
     "subtitles": [],
     "signLanguage": [],
     "imageCredits": []
