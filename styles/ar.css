@@ -27,6 +27,7 @@ body {
 #ar-root {
   position: fixed;
   inset: 0;
+  touch-action: none;
 }
 
 .hud,

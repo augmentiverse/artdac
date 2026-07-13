@@ -23,6 +23,13 @@ const state = {
   warmLight: false,
   keepVisible: true,
   targetFoundOnce: false,
+  isDragging: false,
+  lastPointerX: 0,
+  lastPointerY: 0,
+  manualRotation: {
+    x: 0,
+    y: 0
+  },
   targetRise: CONFIG.initialRise,
   targetScale: CONFIG.initialScale,
   clock: null,
@@ -84,6 +91,8 @@ function bindUI() {
     state.spin = false;
     state.warmLight = false;
     state.keepVisible = true;
+    state.manualRotation.x = 0;
+    state.manualRotation.y = 0;
     state.targetRise = CONFIG.initialRise;
     state.targetScale = CONFIG.initialScale;
     document.getElementById("scale-control").value = CONFIG.initialScale;
@@ -91,6 +100,7 @@ function bindUI() {
     document.getElementById("toggle-spin").classList.remove("active");
     document.getElementById("toggle-light").classList.remove("active");
     document.getElementById("toggle-hold").classList.add("active");
+    applyModelRotation();
     updateLighting();
   });
 
@@ -98,12 +108,49 @@ function bindUI() {
     document.getElementById("info-panel").classList.add("collapsed");
   });
 
+  bindRotationGestures();
+
   document.querySelectorAll(".hotspot").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelectorAll(".hotspot").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       showHotspot(button.dataset.hotspot);
     });
+  });
+}
+
+function bindRotationGestures() {
+  const root = document.getElementById("ar-root");
+
+  root.addEventListener("pointerdown", (event) => {
+    if (!state.model) return;
+    state.isDragging = true;
+    state.lastPointerX = event.clientX;
+    state.lastPointerY = event.clientY;
+    root.setPointerCapture?.(event.pointerId);
+  });
+
+  root.addEventListener("pointermove", (event) => {
+    if (!state.isDragging || !state.model) return;
+
+    const deltaX = event.clientX - state.lastPointerX;
+    const deltaY = event.clientY - state.lastPointerY;
+    state.lastPointerX = event.clientX;
+    state.lastPointerY = event.clientY;
+
+    state.manualRotation.y += deltaX * 0.01;
+    state.manualRotation.x += deltaY * 0.006;
+    state.manualRotation.x = clamp(state.manualRotation.x, -0.65, 0.65);
+    applyModelRotation();
+  });
+
+  root.addEventListener("pointerup", (event) => {
+    state.isDragging = false;
+    root.releasePointerCapture?.(event.pointerId);
+  });
+
+  root.addEventListener("pointercancel", () => {
+    state.isDragging = false;
   });
 }
 
@@ -248,7 +295,7 @@ async function loadModel(group) {
         state.model.name = "mona-lisa-model";
         state.model.scale.setScalar(CONFIG.initialScale);
         state.model.position.set(0, 0, 0);
-        state.model.rotation.set(CONFIG.modelRotation.x, CONFIG.modelRotation.y, CONFIG.modelRotation.z);
+        applyModelRotation();
 
         state.model.traverse((child) => {
           if (!child.isMesh) return;
@@ -281,7 +328,8 @@ function renderFrame(renderer, scene, camera) {
     state.model.position.z += (state.targetRise - state.model.position.z) * 0.08;
 
     if (state.spin) {
-      state.model.rotation.z += delta * 0.55;
+      state.manualRotation.y += delta * 0.55;
+      applyModelRotation();
     }
   }
 
@@ -307,6 +355,20 @@ function updateLighting() {
     fill.intensity = 0.35;
     ambient.intensity = 0.72;
   }
+}
+
+function applyModelRotation() {
+  if (!state.model) return;
+
+  state.model.rotation.set(
+    CONFIG.modelRotation.x + state.manualRotation.x,
+    CONFIG.modelRotation.y + state.manualRotation.y,
+    CONFIG.modelRotation.z
+  );
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function setTrackingStatus(locked) {
