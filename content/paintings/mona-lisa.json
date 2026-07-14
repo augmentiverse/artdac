@@ -156,8 +156,8 @@
         "id": "mona-lisa-audio-en",
         "lang": "en",
         "title": "Mona Lisa audio presentation",
-        "src": "assets/paintings/mona-lisa/mona-lisa-en.m4a",
-        "type": "audio/mp4",
+        "src": "assets/paintings/mona-lisa/mona-lisa-en.mp3",
+        "type": "audio/mpeg",
         "description": "English audio presentation for the Mona Lisa AR experience."
       },
       {
