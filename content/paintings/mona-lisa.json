@@ -151,7 +151,15 @@
   "media": {
     "image": "assets/paintings/mona-lisa/mona-lisa.jpg",
     "model": "assets/paintings/mona-lisa/mona-lisa.glb",
-    "audioGuides": [],
+    "audioGuides": [
+      {
+        "id": "mona-lisa-recorded-guide",
+        "title": "Mona Lisa recorded audio guide",
+        "src": "assets/paintings/mona-lisa/mona-lisa.mp3",
+        "type": "audio/mpeg",
+        "description": "Recorded narration for the Mona Lisa AR experience."
+      }
+    ],
     "videos": [
       {
         "id": "mona-lisa-video",

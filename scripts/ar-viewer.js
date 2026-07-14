@@ -8,6 +8,7 @@ const CONFIG = {
   target: "",
   model: "",
   video: "",
+  audio: "",
   manifest: "",
   initialScale: 0.42,
   initialRise: 0.18,
@@ -163,6 +164,7 @@ const state = {
   video: null,
   videoMesh: null,
   videoVisible: false,
+  audio: null,
   spin: false,
   warmLight: false,
   speaking: false,
@@ -175,10 +177,18 @@ const state = {
   lastPointerY: 0,
   lastPinchDistance: 0,
   lastTwoFingerY: 0,
+  lastTwoFingerX: 0,
+  videoPointerStart: false,
   manualRotation: {
     x: 0,
     y: 0
   },
+  videoTargetPosition: {
+    x: 0.64,
+    y: 0.02,
+    z: 0.36
+  },
+  videoTargetScale: 1,
   targetRise: CONFIG.initialRise,
   targetScale: CONFIG.initialScale,
   clock: null,
@@ -276,6 +286,7 @@ function bindUI() {
     state.manualRotation.y = 0;
     state.targetRise = CONFIG.initialRise;
     state.targetScale = CONFIG.initialScale;
+    resetVideoTransform();
     document.getElementById("toggle-spin").classList.remove("active");
     applyModelRotation();
     updateLighting();
@@ -300,20 +311,28 @@ function bindRotationGestures() {
   const root = document.getElementById("ar-root");
 
   root.addEventListener("pointerdown", (event) => {
-    if (!state.model) return;
+    if (!state.model && !state.videoMesh) return;
     event.preventDefault();
     state.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (state.activePointers.size === 1) {
+      state.videoPointerStart = isPointerOnVideo(event);
+    }
     root.setPointerCapture?.(event.pointerId);
     updateGestureStart();
   });
 
   root.addEventListener("pointermove", (event) => {
-    if (!state.model || !state.activePointers.has(event.pointerId)) return;
+    if ((!state.model && !state.videoMesh) || !state.activePointers.has(event.pointerId)) return;
     event.preventDefault();
     state.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (state.activePointers.size >= 2) {
       handleTwoFingerGesture();
+      return;
+    }
+
+    if (state.gestureMode === "video") {
+      moveVideoWithPointer(event);
       return;
     }
 
@@ -334,12 +353,14 @@ function bindRotationGestures() {
     state.activePointers.delete(event.pointerId);
     state.isDragging = false;
     root.releasePointerCapture?.(event.pointerId);
+    if (state.activePointers.size === 0) state.videoPointerStart = false;
     updateGestureStart();
   });
 
   root.addEventListener("pointercancel", (event) => {
     state.activePointers.delete(event.pointerId);
     state.isDragging = false;
+    if (state.activePointers.size === 0) state.videoPointerStart = false;
     updateGestureStart();
   });
 }
@@ -348,7 +369,7 @@ function updateGestureStart() {
   const pointers = [...state.activePointers.values()];
 
   if (pointers.length === 1) {
-    state.gestureMode = "rotate";
+    state.gestureMode = state.videoPointerStart && state.videoMesh ? "video" : "rotate";
     state.isDragging = true;
     state.lastPointerX = pointers[0].x;
     state.lastPointerY = pointers[0].y;
@@ -356,15 +377,17 @@ function updateGestureStart() {
   }
 
   if (pointers.length >= 2) {
-    state.gestureMode = "transform";
+    state.gestureMode = state.videoPointerStart && state.videoMesh ? "video-transform" : "transform";
     state.isDragging = false;
     state.lastPinchDistance = getPointerDistance(pointers[0], pointers[1]);
     state.lastTwoFingerY = (pointers[0].y + pointers[1].y) / 2;
+    state.lastTwoFingerX = (pointers[0].x + pointers[1].x) / 2;
     return;
   }
 
   state.gestureMode = null;
   state.lastPinchDistance = 0;
+  state.lastTwoFingerX = 0;
 }
 
 function handleTwoFingerGesture() {
@@ -372,7 +395,25 @@ function handleTwoFingerGesture() {
   if (pointers.length < 2) return;
 
   const distance = getPointerDistance(pointers[0], pointers[1]);
+  const midX = (pointers[0].x + pointers[1].x) / 2;
   const midY = (pointers[0].y + pointers[1].y) / 2;
+
+  if (state.gestureMode === "video-transform") {
+    if (state.lastPinchDistance > 0) {
+      const scaleDelta = distance / state.lastPinchDistance;
+      state.videoTargetScale = clamp(state.videoTargetScale * scaleDelta, 0.55, 2.2);
+    }
+
+    if (state.lastTwoFingerY > 0) {
+      state.videoTargetPosition.x = clamp(state.videoTargetPosition.x + (midX - state.lastTwoFingerX) * 0.0022, -0.85, 0.95);
+      state.videoTargetPosition.y = clamp(state.videoTargetPosition.y - (midY - state.lastTwoFingerY) * 0.0022, -0.55, 0.55);
+    }
+
+    state.lastPinchDistance = distance;
+    state.lastTwoFingerX = midX;
+    state.lastTwoFingerY = midY;
+    return;
+  }
 
   if (state.lastPinchDistance > 0) {
     const scaleDelta = distance / state.lastPinchDistance;
@@ -385,11 +426,41 @@ function handleTwoFingerGesture() {
   }
 
   state.lastPinchDistance = distance;
+  state.lastTwoFingerX = midX;
   state.lastTwoFingerY = midY;
 }
 
 function getPointerDistance(first, second) {
   return Math.hypot(first.x - second.x, first.y - second.y);
+}
+
+function isPointerOnVideo(event) {
+  if (!state.videoMesh || !state.videoMesh.visible || !state.mindarThree?.camera) return false;
+
+  const rect = event.currentTarget.getBoundingClientRect();
+  const pointer = new THREE.Vector2(
+    ((event.clientX - rect.left) / rect.width) * 2 - 1,
+    -(((event.clientY - rect.top) / rect.height) * 2 - 1)
+  );
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(pointer, state.mindarThree.camera);
+  return raycaster.intersectObject(state.videoMesh, true).length > 0;
+}
+
+function moveVideoWithPointer(event) {
+  const deltaX = event.clientX - state.lastPointerX;
+  const deltaY = event.clientY - state.lastPointerY;
+  state.lastPointerX = event.clientX;
+  state.lastPointerY = event.clientY;
+  state.videoTargetPosition.x = clamp(state.videoTargetPosition.x + deltaX * 0.0022, -0.85, 0.95);
+  state.videoTargetPosition.y = clamp(state.videoTargetPosition.y - deltaY * 0.0022, -0.55, 0.55);
+}
+
+function resetVideoTransform() {
+  state.videoTargetPosition.x = CONFIG.slug === "mona-lisa" ? 0.62 : 0.58;
+  state.videoTargetPosition.y = 0.02;
+  state.videoTargetPosition.z = CONFIG.initialRise + 0.16;
+  state.videoTargetScale = 1;
 }
 
 async function loadManifest() {
@@ -435,11 +506,13 @@ function configureFromManifest(manifest) {
   CONFIG.target = manifest.ar?.compiledTarget || manifest.print?.compiledMindTarget || CONFIG.target;
   CONFIG.model = manifest.ar?.primaryModel || manifest.media?.model || CONFIG.model;
   CONFIG.video = manifest.media?.videos?.[0]?.src || "";
+  CONFIG.audio = manifest.media?.audioGuides?.[0]?.src || "";
   CONFIG.initialScale = manifest.ar?.viewer?.initialScale ?? CONFIG.initialScale;
   CONFIG.initialRise = manifest.ar?.viewer?.initialRise ?? CONFIG.initialRise;
   CONFIG.modelRotation = manifest.ar?.viewer?.modelRotation || CONFIG.modelRotation;
   state.targetScale = CONFIG.initialScale;
   state.targetRise = CONFIG.initialRise;
+  resetVideoTransform();
 }
 
 function updateInterfaceFromManifest(manifest) {
@@ -558,18 +631,21 @@ function addVideoLayer(group) {
   texture.magFilter = THREE.LinearFilter;
 
   const aspect = 16 / 9;
-  const width = 0.46;
+  const width = 0.72;
   const geometry = new THREE.PlaneGeometry(width, width / aspect);
   const material = new THREE.MeshBasicMaterial({
     map: texture,
     side: THREE.DoubleSide,
     transparent: true,
-    opacity: 0.96
+    opacity: 1,
+    toneMapped: false
   });
 
   const panel = new THREE.Mesh(geometry, material);
   panel.name = "ar-video-panel";
-  panel.position.set(0.54, 0.02, CONFIG.initialRise + 0.08);
+  panel.position.set(state.videoTargetPosition.x, state.videoTargetPosition.y, state.videoTargetPosition.z);
+  panel.scale.setScalar(state.videoTargetScale);
+  panel.renderOrder = 20;
   panel.visible = true;
   group.add(panel);
 
@@ -662,6 +738,7 @@ async function loadModel(group) {
         group.add(state.model);
         state.modelLoaded = true;
         showHotspot("intro");
+        playNativeAudioGuide(true);
         resolve();
       },
       undefined,
@@ -688,7 +765,11 @@ function renderFrame(renderer, scene, camera) {
   }
 
   if (state.videoMesh) {
-    state.videoMesh.position.z += (state.targetRise + 0.08 - state.videoMesh.position.z) * 0.08;
+    state.videoMesh.position.x += (state.videoTargetPosition.x - state.videoMesh.position.x) * 0.16;
+    state.videoMesh.position.y += (state.videoTargetPosition.y - state.videoMesh.position.y) * 0.16;
+    state.videoMesh.position.z += (state.videoTargetPosition.z - state.videoMesh.position.z) * 0.16;
+    const videoScale = new THREE.Vector3(state.videoTargetScale, state.videoTargetScale, state.videoTargetScale);
+    state.videoMesh.scale.lerp(videoScale, 0.16);
   }
 
   renderer.render(scene, camera);
@@ -748,6 +829,11 @@ function showHotspot(id) {
 function toggleAudioGuide() {
   const button = document.getElementById("audio-guide");
 
+  if (CONFIG.audio) {
+    toggleNativeAudioGuide();
+    return;
+  }
+
   if (!("speechSynthesis" in window)) {
     document.getElementById("panel-title").textContent = t("audioUnavailableTitle");
     document.getElementById("panel-body").textContent = t("audioUnavailableBody");
@@ -778,6 +864,63 @@ function toggleAudioGuide() {
   state.speaking = true;
   button.classList.add("active");
   button.textContent = t("stop");
+}
+
+function ensureNativeAudioGuide() {
+  if (!CONFIG.audio) return null;
+  if (state.audio) return state.audio;
+
+  const audio = new Audio(CONFIG.audio);
+  audio.preload = "auto";
+  audio.playsInline = true;
+  audio.addEventListener("ended", () => {
+    state.speaking = false;
+    const button = document.getElementById("audio-guide");
+    button.classList.remove("active");
+    button.textContent = t("audio");
+  });
+  state.audio = audio;
+  return audio;
+}
+
+function playNativeAudioGuide(quiet = false) {
+  const audio = ensureNativeAudioGuide();
+  if (!audio) return;
+
+  const button = document.getElementById("audio-guide");
+  window.speechSynthesis?.cancel();
+  audio.play().then(() => {
+    state.speaking = true;
+    button.classList.add("active");
+    button.textContent = t("stop");
+  }).catch(() => {
+    state.speaking = false;
+    button.classList.remove("active");
+    button.textContent = t("audio");
+    if (!quiet) {
+      document.getElementById("panel-title").textContent = t("audio");
+      document.getElementById("panel-body").textContent = CONFIG.lang === "fr"
+        ? "Touchez Audio pour lancer la narration enregistree."
+        : "Tap Audio to start the recorded narration.";
+      document.getElementById("info-panel").classList.remove("collapsed");
+    }
+  });
+}
+
+function toggleNativeAudioGuide() {
+  const audio = ensureNativeAudioGuide();
+  const button = document.getElementById("audio-guide");
+  if (!audio) return;
+
+  if (state.speaking && !audio.paused) {
+    audio.pause();
+    state.speaking = false;
+    button.classList.remove("active");
+    button.textContent = t("audio");
+    return;
+  }
+
+  playNativeAudioGuide();
 }
 
 function getAudioGuideText() {
