@@ -506,13 +506,24 @@ function configureFromManifest(manifest) {
   CONFIG.target = manifest.ar?.compiledTarget || manifest.print?.compiledMindTarget || CONFIG.target;
   CONFIG.model = manifest.ar?.primaryModel || manifest.media?.model || CONFIG.model;
   CONFIG.video = manifest.media?.videos?.[0]?.src || "";
-  CONFIG.audio = manifest.media?.audioGuides?.[0]?.src || "";
+  CONFIG.audio = getLocalizedAudioGuide(manifest)?.src || "";
   CONFIG.initialScale = manifest.ar?.viewer?.initialScale ?? CONFIG.initialScale;
   CONFIG.initialRise = manifest.ar?.viewer?.initialRise ?? CONFIG.initialRise;
   CONFIG.modelRotation = manifest.ar?.viewer?.modelRotation || CONFIG.modelRotation;
+  state.audio?.pause();
+  state.audio = null;
+  state.speaking = false;
   state.targetScale = CONFIG.initialScale;
   state.targetRise = CONFIG.initialRise;
   resetVideoTransform();
+}
+
+function getLocalizedAudioGuide(manifest) {
+  const guides = manifest.media?.audioGuides || [];
+  return guides.find((guide) => guide.lang === CONFIG.lang)
+    || guides.find((guide) => guide.lang === "en")
+    || guides[0]
+    || null;
 }
 
 function updateInterfaceFromManifest(manifest) {
