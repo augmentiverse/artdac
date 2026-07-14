@@ -671,9 +671,14 @@ async function startAR() {
 
 async function verifyRequiredAsset(src, message) {
   if (!src) throw new Error(message);
-  const response = await fetch(src, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`${message} (${src}: ${response.status})`);
+  try {
+    const response = await fetch(src, { cache: "reload" });
+    if (!response.ok) {
+      throw new Error(`${message} (${src}: ${response.status})`);
+    }
+  } catch (error) {
+    if (error.message?.includes(src)) throw error;
+    console.warn("Asset preflight failed; allowing AR engine to try loading directly.", error);
   }
 }
 
