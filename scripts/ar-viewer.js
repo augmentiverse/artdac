@@ -49,6 +49,8 @@ const UI_TEXT = {
     cameraRequest: "Requesting camera permission...",
     modelErrorTitle: "Model could not load",
     modelErrorBody: "The camera is running, but the 3D model file could not be loaded. Check the GLB path and file size.",
+    targetErrorTitle: "AR target could not load",
+    targetErrorBody: "The image target file could not be loaded. Check the .mind path in the painting manifest.",
     audioUnavailableTitle: "Audio unavailable",
     audioUnavailableBody: "This browser does not support built-in speech narration.",
     audioLoadErrorBody: "The recorded audio could not be loaded. Check that the audio file was uploaded with the site.",
@@ -79,6 +81,8 @@ const UI_TEXT = {
     cameraRequest: "Demande d'autorisation camera...",
     modelErrorTitle: "Le modele ne peut pas se charger",
     modelErrorBody: "La camera fonctionne, mais le fichier 3D ne peut pas etre charge. Verifiez le chemin du GLB et la taille du fichier.",
+    targetErrorTitle: "La cible AR ne peut pas se charger",
+    targetErrorBody: "Le fichier cible image ne peut pas etre charge. Verifiez le chemin du fichier .mind dans la fiche de la peinture.",
     audioUnavailableTitle: "Audio indisponible",
     audioUnavailableBody: "Ce navigateur ne prend pas en charge la narration vocale integree.",
     audioLoadErrorBody: "Le fichier audio enregistre ne peut pas etre charge. Verifiez que le fichier audio a bien ete publie avec le site.",
@@ -598,6 +602,7 @@ async function startAR() {
 
   try {
     setStartupMessage(t("engineLoading"));
+    await verifyRequiredAsset(CONFIG.target, t("targetErrorBody"));
     state.clock = new THREE.Clock();
     const root = document.getElementById("ar-root");
 
@@ -661,6 +666,14 @@ async function startAR() {
     }
   } catch (error) {
     showStartupError(error);
+  }
+}
+
+async function verifyRequiredAsset(src, message) {
+  if (!src) throw new Error(message);
+  const response = await fetch(src, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`${message} (${src}: ${response.status})`);
   }
 }
 
