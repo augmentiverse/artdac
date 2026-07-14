@@ -26,7 +26,7 @@
       </section>
 
       <footer>
-        <button id="compile-button" class="button primary" type="button">Generate van-gogh.mind</button>
+        <button id="compile-button" class="button primary" type="button">Generate target</button>
         <a class="button" href="print-van-gogh.html">Open Van Gogh Target</a>
       </footer>
     </main>
@@ -36,6 +36,28 @@
 
       const status = document.getElementById("compile-status");
       const button = document.getElementById("compile-button");
+      const label = document.getElementById("painting-label");
+      const params = new URLSearchParams(window.location.search);
+      const painting = params.get("painting") || "van-gogh";
+      const targets = {
+        "van-gogh": {
+          label: "Van Gogh Self-Portrait",
+          image: "assets/paintings/van-gogh/van-gogh__Portrait.jpg",
+          output: "van-gogh.mind",
+          page: "print-van-gogh.html"
+        },
+        "van-gogh-bedroom": {
+          label: "Van Gogh The Bedroom",
+          image: "assets/paintings/van-gogh-bedroom/bed_van-gogh.jpeg",
+          output: "van-gogh-bedroom.mind",
+          page: "print-van-gogh-bedroom.html"
+        }
+      };
+      const target = targets[painting] || targets["van-gogh"];
+
+      label.textContent = target.label;
+      button.textContent = `Generate ${target.output}`;
+      document.querySelector("footer a.button").href = target.page;
 
       function setStatus(message) {
         status.textContent = message;
@@ -55,7 +77,7 @@
         try {
           button.disabled = true;
           setStatus("Loading image...");
-          const image = await loadImage("assets/paintings/van-gogh/van-gogh__Portrait.jpg");
+          const image = await loadImage(target.image);
           const compiler = new Compiler();
           setStatus("Compiling target. This can take a minute...");
           await compiler.compileImageTargets([image], (progress) => {
@@ -66,10 +88,10 @@
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = "van-gogh.mind";
+          link.download = target.output;
           link.click();
           URL.revokeObjectURL(url);
-          setStatus("Done. Save the downloaded file to assets/targets/van-gogh.mind.");
+          setStatus(`Done. Save the downloaded file to assets/targets/${target.output}.`);
         } catch (error) {
           setStatus(`${error.name}: ${error.message}`);
         } finally {

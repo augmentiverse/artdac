@@ -1,0 +1,178 @@
+{
+  "id": "vincent-van-gogh-bedroom-1888",
+  "slug": "van-gogh-bedroom",
+  "bookOrder": 3,
+  "title": "The Bedroom",
+  "artist": {
+    "name": "Vincent van Gogh",
+    "birthYear": 1853,
+    "deathYear": 1890,
+    "nationality": "Dutch",
+    "bioShort": "Vincent van Gogh was a Dutch Post-Impressionist painter whose expressive color, visible brushwork, and emotional directness transformed modern art.",
+    "bioLong": "Vincent van Gogh developed one of the most recognizable visual languages of modern painting. In Arles he sought an art of clarity, feeling, and intense color, using everyday subjects to express inner states and the promise of a new artistic life."
+  },
+  "date": "1888",
+  "movement": ["Post-Impressionism"],
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "heightCm": 72,
+    "widthCm": 90
+  },
+  "currentLocation": {
+    "museum": "Van Gogh Museum",
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "latitude": 52.3584,
+    "longitude": 4.8811,
+    "galleryUrl": "https://www.vangoghmuseum.nl/en/collection/s0047V1962"
+  },
+  "print": {
+    "spreadNumber": 3,
+    "chapter": "Impressionism and Post-Impressionism",
+    "imageTargetId": "target-003-van-gogh-bedroom",
+    "imageTargetSource": "assets/paintings/van-gogh-bedroom/bed_van-gogh.jpeg",
+    "compiledMindTarget": "assets/targets/van-gogh-bedroom.mind",
+    "qrUrl": "ar.html?painting=van-gogh-bedroom"
+  },
+  "texts": {
+    "historicalContext": "Van Gogh painted The Bedroom in Arles in 1888, shortly after moving into the Yellow House. The room was meant to represent rest, stability, and the possibility of an artist's home in the south of France.",
+    "artistBiography": "During his Arles period, Van Gogh hoped to build a studio community and create a new art based on strong color, simplified form, and emotional sincerity. His bedroom became a personal subject: ordinary, intimate, and charged with feeling.",
+    "artisticAnalysis": "The painting transforms a simple room into a vivid psychological space. Furniture tilts forward, walls lean, and strong outlines hold bright colors in place. The result feels both welcoming and unstable.",
+    "symbolism": "The bed, chairs, portraits, towels, and window suggest privacy, friendship, hygiene, rest, and artistic identity. The empty chairs also imply absence and expectation.",
+    "composition": "The floorboards pull the eye into the room, while the bed dominates the right side. The chairs, table, pictures, and window create a rhythm of rectangles that makes the room feel carefully staged.",
+    "palette": "Van Gogh uses flat areas of blue, lavender, yellow, orange, green, and red. He described the color as intended to suggest rest, but the contrasts make the room visually alive.",
+    "perspectiveTechnique": "The perspective is deliberately simplified and distorted. Instead of academic accuracy, Van Gogh uses tilted lines and flattened color to make the room expressive.",
+    "culturalSignificance": "The Bedroom is one of Van Gogh's most beloved images because it turns a private interior into a portrait of longing, shelter, and artistic hope.",
+    "influence": "The painting influenced later modern artists by showing that interior space could be emotional, symbolic, and structurally expressive rather than merely descriptive.",
+    "interestingFacts": [
+      "Van Gogh made three versions of The Bedroom.",
+      "The room shown is his bedroom in the Yellow House in Arles.",
+      "He wrote to Theo that the color should suggest rest and sleep."
+    ]
+  },
+  "timeline": [
+    {
+      "year": 1853,
+      "label": "Vincent van Gogh is born in Zundert, Netherlands.",
+      "type": "artist"
+    },
+    {
+      "year": 1888,
+      "label": "Van Gogh moves to Arles and rents rooms in the Yellow House.",
+      "type": "artist"
+    },
+    {
+      "year": 1888,
+      "label": "He paints The Bedroom as an image of his private room and hoped-for stability.",
+      "type": "artwork"
+    },
+    {
+      "year": 1889,
+      "label": "Van Gogh paints later versions of the bedroom composition.",
+      "type": "artwork"
+    },
+    {
+      "year": 1890,
+      "label": "Van Gogh dies at age 37.",
+      "type": "artist"
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "bed",
+      "label": "The Bed",
+      "position2D": [0.72, 0.52],
+      "position3D": [0.24, -0.02, 0.04],
+      "category": "symbolism",
+      "body": "The large yellow bed dominates the room and turns rest into the emotional center of the painting."
+    },
+    {
+      "id": "chairs",
+      "label": "Empty Chairs",
+      "position2D": [0.23, 0.62],
+      "position3D": [-0.26, -0.12, 0.04],
+      "category": "composition",
+      "body": "The empty chairs suggest daily life, hospitality, and absence. They help make the room feel inhabited even without a figure."
+    },
+    {
+      "id": "pictures",
+      "label": "Pictures on the Wall",
+      "position2D": [0.72, 0.16],
+      "position3D": [0.22, 0.3, 0.03],
+      "category": "artist",
+      "body": "The small pictures on the wall refer to Van Gogh's artistic world and make the bedroom feel like a personal studio interior."
+    },
+    {
+      "id": "perspective",
+      "label": "Tilted Perspective",
+      "position2D": [0.46, 0.7],
+      "position3D": [0, -0.24, 0.04],
+      "category": "technique",
+      "body": "The floor and furniture do not follow strict academic perspective. Their tilt gives the room emotional pressure and immediacy."
+    }
+  ],
+  "ar": {
+    "startMode": "painting-emergence",
+    "imageTarget": "assets/paintings/van-gogh-bedroom/bed_van-gogh.jpeg",
+    "compiledTarget": "assets/targets/van-gogh-bedroom.mind",
+    "primaryModel": "assets/paintings/van-gogh-bedroom/bed_van-gogh.glb",
+    "viewer": {
+      "initialScale": 0.38,
+      "initialRise": 0.16,
+      "modelRotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    "availableModes": [
+      "painting-emergence",
+      "artist",
+      "history",
+      "hidden-details",
+      "brushstrokes",
+      "ask-guide"
+    ]
+  },
+  "media": {
+    "image": "assets/paintings/van-gogh-bedroom/bed_van-gogh.jpeg",
+    "model": "assets/paintings/van-gogh-bedroom/bed_van-gogh.glb",
+    "audioGuides": [],
+    "videos": [],
+    "subtitles": [],
+    "signLanguage": [],
+    "imageCredits": []
+  },
+  "education": {
+    "ageBands": ["8-11", "12-15", "16-18", "university"],
+    "learningObjectives": [
+      "Describe how Van Gogh uses color to create emotional space.",
+      "Explain why the perspective looks intentionally unstable.",
+      "Identify symbolic objects in the room.",
+      "Compare an interior scene with a portrait as a way of representing identity."
+    ],
+    "quiz": [
+      {
+        "question": "What feeling did Van Gogh want the bedroom colors to suggest?",
+        "answers": ["Rest", "Battle", "Coldness", "Luxury"],
+        "correctAnswer": "Rest"
+      }
+    ],
+    "vocabulary": ["Post-Impressionism", "interior", "complementary color", "expressive perspective", "Yellow House"],
+    "discussionPrompts": [
+      "How can an empty room feel like a portrait?",
+      "Which object in the room feels most important, and why?"
+    ]
+  },
+  "rights": {
+    "publicDomainStatus": "Artwork is public domain; reproduction and model rights must be verified for production use.",
+    "imageLicense": "User-provided project asset",
+    "assetRestrictions": "Confirm source and reproduction requirements before commercial publication.",
+    "creditLine": "Vincent van Gogh, The Bedroom, 1888."
+  },
+  "references": [
+    "Van Gogh Museum collection materials",
+    "Standard Vincent van Gogh and Post-Impressionism scholarship",
+    "Van Gogh's letters from the Arles period"
+  ]
+}

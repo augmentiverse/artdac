@@ -21,7 +21,8 @@ const CONFIG = {
 
 const PAINTINGS = {
   "mona-lisa": "content/paintings/mona-lisa.json",
-  "van-gogh": "content/paintings/van-gogh.json"
+  "van-gogh": "content/paintings/van-gogh.json",
+  "van-gogh-bedroom": "content/paintings/van-gogh-bedroom.json"
 };
 
 const UI_TEXT = {
@@ -152,6 +153,39 @@ const AR_TRANSLATIONS = {
           label: "Structure sombre",
           category: "composition",
           body: "Le veston sombre stabilise le bas de l'image tout en reprenant la meme energie de touche que le visage et le fond."
+        }
+      }
+    },
+    "van-gogh-bedroom": {
+      title: "La Chambre",
+      texts: {
+        historicalContext: "Van Gogh peint La Chambre a Arles en 1888, peu apres son installation dans la Maison jaune. Cette piece devait representer le repos, la stabilite et l'espoir d'un foyer d'artiste dans le sud de la France.",
+        artisticAnalysis: "La peinture transforme une chambre simple en espace psychologique intense. Les meubles basculent, les murs penchent et les contours forts maintiennent les couleurs vives en place.",
+        composition: "Les lames du plancher guident le regard vers le fond, tandis que le lit domine la partie droite. Chaises, table, tableaux et fenetre creent un rythme de rectangles.",
+        palette: "Van Gogh utilise de grands aplats de bleu, lavande, jaune, orange, vert et rouge. Il voulait evoquer le repos, mais les contrastes rendent la chambre tres vivante.",
+        perspectiveTechnique: "La perspective est volontairement simplifiee et deformee. Les lignes inclinees et les couleurs plates donnent a la chambre une force expressive.",
+        culturalSignificance: "La Chambre est devenue l'une des images les plus aimees de Van Gogh parce qu'elle transforme un interieur prive en portrait de desir de repos, d'abri et d'espoir artistique."
+      },
+      hotspots: {
+        bed: {
+          label: "Le lit",
+          category: "symbolique",
+          body: "Le grand lit jaune domine la chambre et fait du repos le centre emotionnel de la composition."
+        },
+        chairs: {
+          label: "Les chaises vides",
+          category: "composition",
+          body: "Les chaises suggerent la vie quotidienne, l'hospitalite et l'absence. Elles rendent la piece habitee meme sans figure humaine."
+        },
+        pictures: {
+          label: "Les tableaux au mur",
+          category: "artiste",
+          body: "Les petites images au mur renvoient a l'univers artistique de Van Gogh et transforment la chambre en espace personnel."
+        },
+        perspective: {
+          label: "Perspective inclinee",
+          category: "technique",
+          body: "Le sol et les meubles ne suivent pas une perspective academique stricte. Leur inclinaison donne a la chambre une tension expressive."
         }
       }
     }
