@@ -202,7 +202,8 @@ body {
   padding: 6px;
 }
 
-.mini-dock button {
+.mini-dock button,
+.mini-dock a {
   min-height: 32px;
   border: 1px solid var(--line);
   color: var(--text);
@@ -210,9 +211,15 @@ body {
   cursor: pointer;
   font-size: 12px;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 8px;
+  text-decoration: none;
 }
 
-.mini-dock button.active {
+.mini-dock button.active,
+.mini-dock a.active {
   background: var(--gold);
   color: #1b1309;
 }

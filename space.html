@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171310" />
+    <title>DACIART - Place in My Space</title>
+    <link rel="stylesheet" href="styles/space.css" />
+    <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  </head>
+  <body>
+    <main class="space-shell">
+      <header class="space-header">
+        <a id="back-link" class="button" href="index.html">Back</a>
+        <div>
+          <p id="space-kicker" class="eyebrow">Room Placement</p>
+          <h1 id="space-title">Artwork</h1>
+          <p id="space-copy">Place the 3D model in your space, then move, rotate, and scale it with your device's AR controls.</p>
+        </div>
+      </header>
+
+      <model-viewer
+        id="space-model"
+        camera-controls
+        touch-action="pan-y"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-placement="floor"
+        shadow-intensity="0.65"
+        exposure="1"
+        loading="eager"
+        reveal="auto">
+        <button id="ar-button" class="button primary ar-button" slot="ar-button" type="button">Place in My Space</button>
+      </model-viewer>
+
+      <section class="space-panel" aria-live="polite">
+        <p id="space-status">Loading model...</p>
+        <div class="actions">
+          <button id="open-ar" class="button primary" type="button">Place in My Space</button>
+          <a id="image-ar-link" class="button" href="ar.html">Image AR</a>
+          <a id="print-link" class="button" href="index.html">Printed Page</a>
+        </div>
+        <p id="ios-note" class="note" hidden>On iPhone, true room placement may require a USDZ version of this model. Android Chrome can use the GLB directly.</p>
+      </section>
+    </main>
+
+    <script type="module" src="scripts/space-viewer.js?v=2"></script>
+  </body>
+</html>

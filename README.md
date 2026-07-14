@@ -6,6 +6,7 @@ This repository is a GitHub Pages-ready prototype for an augmented reality art b
 
 - `index.html` - book landing page and first spread preview.
 - `ar.html` - live WebAR viewer using MindAR and Three.js.
+- `space.html` - room-placement viewer for placing a GLB model in the user's space on compatible AR browsers.
 - `print-target.html` - rich printable Mona Lisa catalogue spread.
 - `print-van-gogh.html` - rich printable Van Gogh catalogue spread.
 - `assets/paintings/mona-lisa/mona-lisa.jpg` - printed target image.
@@ -68,7 +69,12 @@ The current viewer already supports loading by query string:
 ```text
 ar.html?painting=mona-lisa
 ar.html?painting=van-gogh
+space.html?painting=mona-lisa
+space.html?painting=van-gogh
+space.html?painting=van-gogh-bedroom
 ```
+
+`space.html` uses model-viewer room placement. Android Chrome can place GLB models directly. iPhone Safari generally needs USDZ files for native room placement; add `media.usdz` to a painting manifest when a USDZ conversion is available.
 
 ## Regenerating The MindAR Target
 

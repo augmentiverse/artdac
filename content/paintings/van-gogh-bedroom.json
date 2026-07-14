@@ -137,6 +137,7 @@
   "media": {
     "image": "assets/paintings/van-gogh-bedroom/bed_van-gogh.jpeg",
     "model": "assets/paintings/van-gogh-bedroom/bed_van-gogh.glb",
+    "usdz": "assets/paintings/van-gogh-bedroom/bed_van-gogh.usdz",
     "audioGuides": [],
     "videos": [],
     "subtitles": [],

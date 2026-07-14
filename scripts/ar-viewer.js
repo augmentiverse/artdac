@@ -37,6 +37,7 @@ const UI_TEXT = {
     stop: "Stop",
     video: "Video",
     hideVideo: "Hide Video",
+    space: "Space",
     rotate: "Rotate",
     reset: "Reset",
     noVideoTitle: "No video",
@@ -69,6 +70,7 @@ const UI_TEXT = {
     stop: "Stop",
     video: "Video",
     hideVideo: "Masquer video",
+    space: "Espace",
     rotate: "Rotation",
     reset: "Reinitialiser",
     noVideoTitle: "Aucune video",
@@ -276,6 +278,8 @@ function applyStaticLanguage() {
   document.getElementById("video-guide").textContent = t("video");
   document.getElementById("toggle-spin").textContent = t("rotate");
   document.getElementById("reset-view").textContent = t("reset");
+  document.getElementById("space-link").textContent = t("space");
+  document.getElementById("space-link").href = `space.html?painting=${CONFIG.slug}&lang=${CONFIG.lang}`;
   document.getElementById("panel-kicker").textContent = t("catalogue");
 }
 
