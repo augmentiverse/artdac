@@ -503,10 +503,11 @@ function renderHotspotButtons(manifest) {
 }
 
 function configureFromManifest(manifest) {
+  const audioGuide = getLocalizedAudioGuide(manifest);
   CONFIG.target = manifest.ar?.compiledTarget || manifest.print?.compiledMindTarget || CONFIG.target;
   CONFIG.model = manifest.ar?.primaryModel || manifest.media?.model || CONFIG.model;
   CONFIG.video = manifest.media?.videos?.[0]?.src || "";
-  CONFIG.audio = getLocalizedAudioGuide(manifest)?.src || "";
+  CONFIG.audio = audioGuide?.src ? withAssetVersion(audioGuide.src) : "";
   CONFIG.initialScale = manifest.ar?.viewer?.initialScale ?? CONFIG.initialScale;
   CONFIG.initialRise = manifest.ar?.viewer?.initialRise ?? CONFIG.initialRise;
   CONFIG.modelRotation = manifest.ar?.viewer?.modelRotation || CONFIG.modelRotation;
@@ -524,6 +525,11 @@ function getLocalizedAudioGuide(manifest) {
     || guides.find((guide) => guide.lang === "en")
     || guides[0]
     || null;
+}
+
+function withAssetVersion(src) {
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}lang=${CONFIG.lang}&v=20`;
 }
 
 function updateInterfaceFromManifest(manifest) {
